@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using dotnetCampus.Cli;
+using dotnetCampus.Configurations.Core;
 
 namespace dotnetCampus.Runtime.CompilerServices
 {
@@ -26,8 +28,18 @@ namespace dotnetCampus.Runtime.CompilerServices
         {
             if (options.ArgumentsFile is null || options.GeneratedSourceDirectory is null)
             {
-                Console.WriteLine("error: Compiling arguments are null. This may be a bug of dotnetCampus.GenericGenerator.");
+                ReportBug("Compiling arguments are null.");
+                return;
             }
+
+            var argumentsFile = ConfigurationFactory.FromFile(options.ArgumentsFile).CreateAppConfigurator().Of<ArgumentsFile>();
+            var generatedSourceDirectory = new DirectoryInfo(options.GeneratedSourceDirectory);
+            new GenericCompiler(generatedSourceDirectory).Compile(argumentsFile.Compile);
+        }
+
+        private static void ReportBug(string text)
+        {
+            Console.WriteLine($"error: {text} This may be a bug of dotnetCampus.GenericGenerator. Please post it here: https://github.com/dotnet-campus/dotnetCampus.GenericGenerator/issues/new");
         }
     }
 }
