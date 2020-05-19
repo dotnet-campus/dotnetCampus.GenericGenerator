@@ -12,7 +12,7 @@
   <Target Name="_DCGG_EvaluateProperties">
     <PropertyGroup>
       <_DCGG_ArgumentsFile>$(IntermediateOutputPath)$(TargetFramework)\dcgg\arguments.coin</_DCGG_ArgumentsFile>
-      <_DCGG_GeneratedSourceFolder>$(IntermediateOutputPath)$(TargetFramework)\dcgg\src\</_DCGG_GeneratedSourceFolder>
+      <_DCGG_GeneratedSourceFolder>$(IntermediateOutputPath)$(TargetFramework)\dcgg\generated\</_DCGG_GeneratedSourceFolder>
       <_DCGG_Root>$(MSBuildThisFileDirectory)..\</_DCGG_Root>
       <_DCGG_SourceFolder>$(MSBuildThisFileDirectory)..\src\</_DCGG_SourceFolder>
       <_DCGG_ToolFile>$(MSBuildThisFileDirectory)..\tools\dotnetCampus.GenericGenerator.Tool.dll</_DCGG_ToolFile>
