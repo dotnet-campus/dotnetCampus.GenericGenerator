@@ -7,7 +7,8 @@ namespace dotnetCampus.Runtime.CompilerServices
     /// <para />
     /// Tips: Type parameter name MUST be T. All other names will be treated as NO CHANGE during the compilation.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
+    // We should mark this attribute allowing multiple because users may mark this on a partial class and this will cause a multiple attribute.
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct, Inherited = false, AllowMultiple = true)]
     internal sealed class GenerateGenericFromThisAttribute : Attribute
     {
         /// <summary>

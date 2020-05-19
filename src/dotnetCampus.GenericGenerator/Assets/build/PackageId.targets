@@ -11,8 +11,8 @@
   <!-- Evaluate all the basic properties. -->
   <Target Name="_DCGG_EvaluateProperties">
     <PropertyGroup>
-      <_DCGG_ArgumentsFile>$(IntermediateOutputPath)$(TargetFramework)\dcgg\arguments.coin</_DCGG_ArgumentsFile>
-      <_DCGG_GeneratedSourceFolder>$(IntermediateOutputPath)$(TargetFramework)\dcgg\generated\</_DCGG_GeneratedSourceFolder>
+      <_DCGG_ArgumentsFile>$(IntermediateOutputPath)dcgg\arguments.coin</_DCGG_ArgumentsFile>
+      <_DCGG_GeneratedCodeFolder>$(IntermediateOutputPath)dcgg\generated\</_DCGG_GeneratedCodeFolder>
       <_DCGG_Root>$(MSBuildThisFileDirectory)..\</_DCGG_Root>
       <_DCGG_SourceFolder>$(MSBuildThisFileDirectory)..\src\</_DCGG_SourceFolder>
       <_DCGG_ToolFile>$(MSBuildThisFileDirectory)..\tools\dotnetCampus.GenericGenerator.Tool.dll</_DCGG_ToolFile>
@@ -59,9 +59,9 @@
   <!-- Generate generic types and Import them into the target project. -->
   <Target Name="_DCGG_IncludeGeneratedFiles"
           BeforeTargets="CoreCompile"
-          DependsOnTargets="_DCGG_EvaluateProperties">
+          DependsOnTargets="_DCGG_WriteArgs">
     <Exec ConsoleToMSBuild="True"
-          Command="dotnet &quot;$(_DCGG_ToolFile)&quot; --arguments-file &quot;$(_DCGG_ArgumentsFile) &quot; --generated-source-directory &quot;$(_DCGG_GeneratedSourceFolder) &quot;" />
+          Command="dotnet &quot;$(_DCGG_ToolFile)&quot; --arguments-file &quot;$(_DCGG_ArgumentsFile) &quot; --generated-source-directory &quot;$(_DCGG_GeneratedCodeFolder) &quot;" />
     <ItemGroup>
       <_DCGG_GeneratedGenericCode Include="$(_DCGG_GeneratedCodeFolder)**\*.cs" />
       <_DCGG_AllCompile Include="@(_DCGG_GeneratedGenericCode)" />

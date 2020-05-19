@@ -5,7 +5,7 @@
     <RootNamespace>dotnetCampus.Runtime.CompilerServices</RootNamespace>
     <DocumentationFile>$(OutputPath)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageOutputPath>..\bin\bin\$(Configuration)</PackageOutputPath>
+    <PackageOutputPath>..\..\bin\$(Configuration)</PackageOutputPath>
     <PackageId>dotnetCampus.GenericGenerator</PackageId>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

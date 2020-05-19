@@ -10,6 +10,7 @@ namespace dotnetCampus.Runtime.CompilerServices
         [Option("GeneratedSourceDirectory")]
         public string? GeneratedSourceDirectory { get; set; }
 
-
+        [Option("Debug")]
+        public bool OpenDebugger { get; set; }
     }
 }

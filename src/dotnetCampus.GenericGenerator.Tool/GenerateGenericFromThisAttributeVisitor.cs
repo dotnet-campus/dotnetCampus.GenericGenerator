@@ -57,8 +57,8 @@ namespace dotnetCampus.Runtime.CompilerServices
                         var argumentList = node.ChildNodes().OfType<AttributeArgumentListSyntax>().FirstOrDefault();
                         if (argumentList is null)
                         {
-                            GenerateFromCount = 2;
-                            GenerateToCount = 8;
+                            GenerateFromCount = _defaultGenerateFromCount;
+                            GenerateToCount = _defaultGenerateToCount;
                         }
                         else
                         {
@@ -66,16 +66,18 @@ namespace dotnetCampus.Runtime.CompilerServices
                             var assignIndex = 0;
                             foreach (var argument in arguments)
                             {
-                                int.TryParse(argument.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var value);
-                                if (assignIndex == 0)
+                                if (int.TryParse(argument.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
                                 {
-                                    GenerateFromCount = value;
+                                    if (assignIndex == 0)
+                                    {
+                                        GenerateFromCount = value;
+                                    }
+                                    else
+                                    {
+                                        GenerateToCount = value;
+                                    }
+                                    assignIndex++;
                                 }
-                                else
-                                {
-                                    GenerateToCount = value;
-                                }
-                                assignIndex++;
                             }
                         }
                     }

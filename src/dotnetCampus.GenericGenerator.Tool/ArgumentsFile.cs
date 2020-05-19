@@ -13,8 +13,8 @@ namespace dotnetCampus.Runtime.CompilerServices
         {
         }
 
-        public string[] Compile => ((string)GetString()).Split(';', StringSplitOptions.RemoveEmptyEntries);
+        public string[] Compile => ((string)GetString()).Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
-        public string[] DefineConstants => ((string)GetString()).Split(';', StringSplitOptions.RemoveEmptyEntries);
+        public string[] DefineConstants => ((string)GetString()).Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
     }
 }

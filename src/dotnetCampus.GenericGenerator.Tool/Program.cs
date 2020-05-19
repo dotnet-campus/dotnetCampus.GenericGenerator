@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,10 @@ namespace dotnetCampus.Runtime.CompilerServices
             try
             {
                 var options = CommandLine.Parse(args).As<Options>();
+                if (options.OpenDebugger && !Debugger.IsAttached)
+                {
+                    Debugger.Launch();
+                }
                 Run(options);
             }
             catch (Exception ex)
