@@ -1,1 +1,2 @@
-dotnetCampus.GenericGenerator.Tool*
+dotnetCampus.GenericGenerator.Tool.*
+Microsoft.CodeAnalysis.*

@@ -1,4 +1,4 @@
-﻿﻿<Project>
+﻿<Project>
 
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -41,11 +41,10 @@
     <Message Text="3.1 Import C# code for writing in editor: @(_DCGG_ApiExport)" />
   </Target>
 
-  <!--第二阶段，写入 SourceFusion 需要的命令行参数-->
+  <!-- Write command line args. -->
   <Target Name="_DCGG_WriteArgs"
           DependsOnTargets="_DCGG_EvaluateProperties">
     <ItemGroup>
-      <!--这里正在按格式编写配置文件，配置文件尚未开源，所以暂时没有名字。-->
       <_DCGG_ArgsLine Include=">" />
       <_DCGG_ArgsLine Include="DefineConstants" />
       <_DCGG_ArgsLine Include="$(DefineConstants)" />
