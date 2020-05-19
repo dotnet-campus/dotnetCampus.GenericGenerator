@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetCampus.GenericGenerator", "dotnetCampus.GenericGenerator\dotnetCampus.GenericGenerator.csproj", "{AEFED1EB-1723-46F0-8EF3-A10D273B5E64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetCampus.GenericGenerator", "src\dotnetCampus.GenericGenerator\dotnetCampus.GenericGenerator.csproj", "{AEFED1EB-1723-46F0-8EF3-A10D273B5E64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetCampus.GenericGenerator.Tool", "dotnetCampus.GenericGenerator.Tool\dotnetCampus.GenericGenerator.Tool.csproj", "{9C68D783-E6F3-4CA0-8841-F0D430903DBB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetCampus.GenericGenerator.Tool", "src\dotnetCampus.GenericGenerator.Tool\dotnetCampus.GenericGenerator.Tool.csproj", "{9C68D783-E6F3-4CA0-8841-F0D430903DBB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6D942B41-1AF5-4B7E-A08A-899F98C6D412}"
 	ProjectSection(SolutionItems) = preProject
