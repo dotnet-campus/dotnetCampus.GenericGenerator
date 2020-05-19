@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace dotnetCampus.GenericGenerator
+namespace dotnetCampus.Runtime.CompilerServices
 {
     public class GenerateGenericFromThisAttribute
     {
