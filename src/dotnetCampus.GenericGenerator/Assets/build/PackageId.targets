@@ -5,196 +5,81 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <_ENSdkImportInWpfTempProjectDependsOn>_ENSdkIncludeSourceFiles;_ENSdkIncludeDependentSourceFiles</_ENSdkImportInWpfTempProjectDependsOn>
+    <_DCGG_ImportInWpfTempProjectDependsOn>_DCGG_IncludeSourceFiles;_DCGG_IncludeGeneratedFiles</_DCGG_ImportInWpfTempProjectDependsOn>
   </PropertyGroup>
 
-  <!-- 计算所有编译目标所需的各种属性和参数。 -->
-  <Target Name="_EnSdkEvaluateProperties">
+  <!-- Evaluate all the basic properties. -->
+  <Target Name="_DCGG_EvaluateProperties">
     <PropertyGroup>
-      <_ENSdkGeneratedSourceFolder>$(IntermediateOutputPath)EasiPluginSdk\</_ENSdkGeneratedSourceFolder>
-      <_ENSdkRoot>$(MSBuildThisFileDirectory)..\</_ENSdkRoot>
-      <_ENSdkLibFile>$(MSBuildThisFileDirectory)..\lib\net45\dotnetCampus.EasiPlugin.dll</_ENSdkLibFile>
-      <_ENSdkSourceFolder>$(MSBuildThisFileDirectory)..\src\</_ENSdkSourceFolder>
-      <_ENSdkTemplateEntryPointFile>$(_ENSdkRoot)template\GeneratedProgram.g.cs</_ENSdkTemplateEntryPointFile>
-      <_ENSdkGeneratedEntryPointFile>$(_ENSdkGeneratedSourceFolder)GeneratedProgram.g.cs</_ENSdkGeneratedEntryPointFile>
-      <_ENSdkPluginPackingFolder>$(_ENSdkGeneratedSourceFolder)Packing\</_ENSdkPluginPackingFolder>
-      <_ENSdkToolFile>$(MSBuildThisFileDirectory)..\tools\dotnetCampus.EasiPlugins.Development.exe</_ENSdkToolFile>
-      <_ENSdkILToolFile>$(MSBuildThisFileDirectory)..\tools\ILRepack.exe</_ENSdkILToolFile>
-      <_ENSdkDebuggableInstall Condition=" '$(Configuration)' == 'Debug' And '$(ENSdkAutoInstallOnBuild)' != 'True' ">True</_ENSdkDebuggableInstall>
-      <_ENSdkDebuggableInstall Condition=" '$(_ENSdkDebuggableInstall)' == '' ">False</_ENSdkDebuggableInstall>
-      <ApplicationIcon Condition=" '$(ApplicationIcon)' == '' ">$(_ENSdkRoot)assets\icon.ico</ApplicationIcon>
+      <_DCGG_ArgumentsFile>$(IntermediateOutputPath)$(TargetFramework)\dcgg\arguments.coin</_DCGG_ArgumentsFile>
+      <_DCGG_GeneratedSourceFolder>$(IntermediateOutputPath)$(TargetFramework)\dcgg\src\</_DCGG_GeneratedSourceFolder>
+      <_DCGG_Root>$(MSBuildThisFileDirectory)..\</_DCGG_Root>
+      <_DCGG_SourceFolder>$(MSBuildThisFileDirectory)..\src\</_DCGG_SourceFolder>
+      <_DCGG_ToolFile>$(MSBuildThisFileDirectory)..\tools\dotnetCampus.GenericGenerator.Tool.dll</_DCGG_ToolFile>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(_ENSdkDebuggableInstall)' == 'True' ">
-      <DefineConstants>$(DefineConstants);PLUGIN_HAS_DEPENDENCY</DefineConstants>
-    </PropertyGroup>
-    <Message Text="1.1 初始化插件 Sdk" />
+    <Message Text="1.1 Initialize the dotnetCampus.GenericGenerator..." />
   </Target>
 
-  <!-- 避免依赖传递。 -->
-  <Target Name="_ENSdkPrivateAssets"
+  <!-- Prevent this nuget package being referenced pass through. -->
+  <Target Name="_DCGG_PrivateAssets"
           BeforeTargets="CollectPackageReferences">
     <ItemGroup>
-      <PackageReference Update="dotnetCampus.EasiPlugin.Sdk" PrivateAssets="all" />
+      <PackageReference Update="dotnetCampus.GenericGenerator" PrivateAssets="all" />
     </ItemGroup>
-    <Message Text="1.2 避免依赖传递" />
-  </Target>
-  
-  <!-- 组织目标项目文件夹结构。 -->
-  <Target Name="_ENSdkMakeProjectFiles"
-          AfterTargets="AfterBuild"
-          DependsOnTargets="_EnSdkEvaluateProperties">
-    <MakeDir Directories="$(_ENSdkGeneratedSourceFolder)" ContinueOnError="false" />
-    <Exec ConsoleToMSBuild="True"
-          Command="&quot;$(_ENSdkToolFile)&quot; hierarchy --project-directory &quot;$(MSBuildProjectDirectory) &quot; --template-folder &quot;$(_ENSdkRoot)\template&quot; ">
-      <Output TaskParameter="ConsoleOutput" PropertyName="ENSdkDependencyPathPrivate" />
-    </Exec>
-    <PropertyGroup>
-      <ENSdkDependencyPath Condition=" $(ENSdkDependencyPath) == '' ">$([MSBuild]::EnsureTrailingSlash('$(ENSdkDependencyPathPrivate)'))</ENSdkDependencyPath>
-    </PropertyGroup>
-    <Message Text="5.1 生成调试文件：Properties\launchSettings.json" />
+    <Message Text="1.2 Prevent this nuget package being referenced pass through." />
   </Target>
 
-  <!-- 修改入口点函数的代码，使之能够正确重定向入口点函数。 -->
-  <Target Name="_ENSdkGenerateProgramFile"
-          DependsOnTargets="_EnSdkEvaluateProperties">
-    <MakeDir Directories="$(_ENSdkGeneratedSourceFolder)" ContinueOnError="false" />
-    <Exec ConsoleToMSBuild="True"
-          Command="&quot;$(_ENSdkToolFile)&quot; compile --project-directory &quot;$(MSBuildProjectDirectory) &quot; --template-folder &quot;$(_ENSdkRoot)\template&quot; --generated-entry &quot;$(_ENSdkGeneratedEntryPointFile)&quot; --startup-object $([System.String]::Copy('$(StartupObject)').Trim())" />
-    <PropertyGroup>
-      <_ENSdkOriginalStartupObject>$(StartupObject)</_ENSdkOriginalStartupObject>
-      <StartupObject>Cvte.EasiNote.Extensions.AssemblyProvider</StartupObject>
-    </PropertyGroup>
-    <ItemGroup>
-      <Compile Include="$(_ENSdkGeneratedEntryPointFile)" />
-    </ItemGroup>
-    <Message Text="2. 生成新入口点函数：$(_ENSdkGeneratedEntryPointFile)" />
-  </Target>
-
-  <!-- 引入主要的 C# 源码。 -->
-  <Target Name="_ENSdkIncludeSourceFiles"
+  <!-- Import C# code for writing in editor. -->
+  <Target Name="_DCGG_IncludeSourceFiles"
           BeforeTargets="CoreCompile"
-          DependsOnTargets="_ENSdkGenerateProgramFile">
+          DependsOnTargets="_DCGG_EvaluateProperties">
     <ItemGroup>
-      <_ENSdkCompile Include="$(_ENSdkSourceFolder)Compile\**\*.cs" />
-      <_ENSdkAllCompile Include="@(_ENSdkCompile)" />
-      <Compile Include="@(_ENSdkCompile)" />
+      <_DCGG_ApiExport Include="$(_DCGG_SourceFolder)**\*.cs" />
+      <_DCGG_AllCompile Include="@(_DCGG_ApiExport)" />
+      <Compile Include="@(_DCGG_ApiExport)" />
     </ItemGroup>
-    <Message Text="3.1 引用插件接入相关的源码：@(_ENSdkCompile)" />
+    <Message Text="3.1 Import C# code for writing in editor: @(_DCGG_ApiExport)" />
   </Target>
 
-  <!-- 引入依赖希沃白板的 C# 源码。 -->
-  <Target Name="_ENSdkIncludeDependentSourceFiles"
+  <!--第二阶段，写入 SourceFusion 需要的命令行参数-->
+  <Target Name="_DCGG_WriteArgs"
+          DependsOnTargets="_DCGG_EvaluateProperties">
+    <ItemGroup>
+      <!--这里正在按格式编写配置文件，配置文件尚未开源，所以暂时没有名字。-->
+      <_DCGG_ArgsLine Include=">" />
+      <_DCGG_ArgsLine Include="Compile" />
+      <_DCGG_ArgsLine Include="@(Compile)" />
+      <_DCGG_ArgsLine Include=">" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(_DCGG_ArgumentsFile)" Lines="@(_DCGG_ArgsLine)" Overwrite="True" />
+  </Target>
+
+  <!-- Generate generic types and Import them into the target project. -->
+  <Target Name="_DCGG_IncludeGeneratedFiles"
           BeforeTargets="CoreCompile"
-          DependsOnTargets="_ENSdkGenerateProgramFile">
-    <PropertyGroup Condition=" '$(UseEasiNote)' == 'True' ">
-      <DefineConstants>$(DefineConstants);PLUGIN_IS_EN_DEPENDENT</DefineConstants>
-    </PropertyGroup>
-    <ItemGroup Condition=" '$(UseEasiNote)' == 'True' ">
-      <_ENSdkENCompile Include="$(_ENSdkSourceFolder)EasiNote\**\*.cs" />
-      <_ENSdkAllCompile Include="@(_ENSdkENCompile)" />
-      <Compile Include="@(_ENSdkENCompile)" />
-    </ItemGroup>
-    <Message Text="3.2 引用希沃白板相关调用的源码：@(_ENSdkENCompile)" />
-  </Target>
-
-  <!-- 引入 WPF 框架源码。 -->
-  <Target Name="_ENSdkIncludeWpfFiles"
-          BeforeTargets="MarkupCompilePass1"
-          DependsOnTargets="_ENSdkGenerateProgramFile">
+          DependsOnTargets="_DCGG_EvaluateProperties">
+    <Exec ConsoleToMSBuild="True"
+          Command="dotnet &quot;$(_DCGG_ToolFile)&quot; --arguments-file &quot;$(_DCGG_ArgumentsFile) &quot; --generated-source-directory &quot;$(_DCGG_GeneratedSourceFolder) &quot;" />
     <ItemGroup>
-      <_ENSdkPage Include="$(_ENSdkSourceFolder)Compile\**\*.xaml" />
-      <Page Include="@(_ENSdkPage)" Link="Views\%(_ENSdkPage.FileName).xaml" />
-      <_ENSdkIcoResource Include="$(_ENSdkRoot)assets\*.ico" />
-      <_ENSdkPngResource Include="$(_ENSdkRoot)assets\*.png" />
-      <Resource Include="@(_ENSdkIcoResource)" Link="assets\%(_ENSdkIcoResource.FileName).ico" />
-      <Resource Include="@(_ENSdkPngResource)" Link="assets\%(_ENSdkPngResource.FileName).png" />
+      <_DCGG_GeneratedGenericCode Include="$(_DCGG_GeneratedCodeFolder)**\*.cs" />
+      <_DCGG_AllCompile Include="@(_DCGG_GeneratedGenericCode)" />
+      <Compile Include="@(_DCGG_GeneratedGenericCode)" />
     </ItemGroup>
-    <Message Text="3.3 引用 WPF 相关源码：@(_ENSdkPage);@(_ENSdkIcoResource);@(_ENSdkPngResource)" />
+    <Message Text="3.2 Import C# code for writing in editor: @(_DCGG_GeneratedGenericCode)" />
   </Target>
 
-  <!-- 引入 ValueTuple。 -->
-  <ItemGroup Condition=" '$(UseEasiNote)' == 'True' ">
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-  </ItemGroup>
-
-  <!-- 引用希沃白板 API。 -->
-  <Target Name="_ENSdkReferenceApis"
-          BeforeTargets="ResolveAssemblyReferences"
-          DependsOnTargets="_ENSdkMakeProjectFiles">
-    <ItemGroup Condition=" '$(UseEasiNote)' == 'True' ">
-      <_ENSdkReference Include="System.ComponentModel.Composition" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Core.cc.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.EasiUI.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.IO.cc.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.IPC.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.IPC.WCF.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Net.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Storage.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Paint.Framework.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Paint.Shell.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Windows.cc.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Windows.MathEditor.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.Api.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.Business.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.Extension.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.UI.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.Utils.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.Resources.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Windows.TextEditorPlus.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Paint.Table.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)YamlDotNet.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.CoursewareStorage.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Paint.Chart.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Windows.FuncDraw.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Escort.MVVM.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Windows.Media.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.Server.Protocol.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Windows.MidiCore.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)EasiNote.CoursewareService.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Paint.FlashPlayer.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Paint.Remark.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.QrCode.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Mathematics.Adsorb.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Mcu.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Pipe.Protocol.dll" />
-      <_ENSdkReferencePath Include="$(ENSdkDependencyPath)Cvte.Platform.dll" />
-      <Reference Include="@(_ENSdkReference)" />
-      <ReferencePath Include="@(_ENSdkReferencePath)" />
-    </ItemGroup>
-    <Message Condition=" '$(UseEasiNote)' == 'True' " Text="3.5 引用希沃白板安装包：$(ENSdkDependencyPath)" />
-  </Target>
-
-  <!-- 当生成 WPF 临时项目时，不会自动 Import NuGet 中的 props 和 targets 文件，这使得在临时项目中你现在看到的整个文件都不会参与编译。
-       然而，我们可以通过欺骗的方式在主项目中通过 _GeneratedCodeFiles 集合将需要编译的文件传递到临时项目中以间接参与编译。
-       WPF 临时项目不会 Import NuGet 中的 props 和 targets 可能是 WPF 的 Bug，也可能是刻意如此。
-       所以我们通过一个属性开关 `ShouldFixNuGetImportingBugForWpfProjects` 来决定是否修复这个错误。-->
-  <Target Name="_ENSdkImportInWpfTempProject"
+  <!-- Fix bugs for WPF projects. See:
+       - https://blog.walterlv.com/post/build-source-code-package-for-wpf-projects
+       - https://github.com/dotnet/wpf/issues/811 -->
+  <Target Name="_DCGG_ImportInWpfTempProject"
           AfterTargets="MarkupCompilePass1"
           BeforeTargets="GenerateTemporaryTargetAssembly"
-          DependsOnTargets="$(_ENSdkImportInWpfTempProjectDependsOn)"
+          DependsOnTargets="$(_DCGG_ImportInWpfTempProjectDependsOn)"
           Condition=" '$(ShouldFixNuGetImportingBugForWpfProjects)' == 'True' ">
     <ItemGroup>
-      <_GeneratedCodeFiles Include="@(_ENSdkAllCompile)" />
+      <_GeneratedCodeFiles Include="@(_DCGG_AllCompile)" />
     </ItemGroup>
-    <Message Text="4. 正在协助组织 WPF 临时项目编译文件：@(_ENSdkAllCompile)" />
-  </Target>
-  
-  <!-- 准备可被打包的插件程序集。 -->
-  <Target Name="_ENSdkPrepareForPack"
-          AfterTargets="AfterBuild"
-          DependsOnTargets="_EnSdkEvaluateProperties;CopyFilesToOutputDirectory">
-    <Message Text="5.2 准备插件文件" />
-    <Exec ConsoleToMSBuild="True"
-          Command="&quot;$(_ENSdkToolFile)&quot; packprepare --il-tool-path &quot;$(_ENSdkILToolFile)&quot; --output-path $(OutputPath) --packing-folder &quot;$(_ENSdkPluginPackingFolder) &quot; --assembly-name $(AssemblyName) --easinote-folder &quot;$(ENSdkDependencyPath) &quot;" />
-  </Target>
-
-  <!-- 安装插件。 -->
-  <Target Name="_ENSdkInstallPlugin"
-          AfterTargets="AfterBuild"
-          DependsOnTargets="_ENSdkPrepareForPack">
-    <Message Text="5.3 安装插件" />
-    <Exec ConsoleToMSBuild="True"
-          Command="&quot;$(_ENSdkToolFile)&quot; install --output-path $(OutputPath) --packing-folder &quot;$(_ENSdkPluginPackingFolder) &quot; --assembly-name $(AssemblyName) --version $(Version) --install-for-debug $(_ENSdkDebuggableInstall)" />
+    <Message Text="4. Fix WPF compiling issue (https://github.com/dotnet/wpf/issues/811): @(_DCGG_AllCompile)" />
   </Target>
 
 </Project>
