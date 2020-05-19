@@ -34,7 +34,7 @@ namespace dotnetCampus.Runtime.CompilerServices
 
             var argumentsFile = ConfigurationFactory.FromFile(options.ArgumentsFile).CreateAppConfigurator().Of<ArgumentsFile>();
             var generatedSourceDirectory = new DirectoryInfo(options.GeneratedSourceDirectory);
-            new GenericCompiler(generatedSourceDirectory).Compile(argumentsFile.Compile);
+            new GenericCompiler(generatedSourceDirectory).Compile(argumentsFile);
         }
 
         private static void ReportBug(string text)

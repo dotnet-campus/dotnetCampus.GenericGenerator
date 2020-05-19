@@ -47,6 +47,9 @@
     <ItemGroup>
       <!--这里正在按格式编写配置文件，配置文件尚未开源，所以暂时没有名字。-->
       <_DCGG_ArgsLine Include=">" />
+      <_DCGG_ArgsLine Include="DefineConstants" />
+      <_DCGG_ArgsLine Include="$(DefineConstants)" />
+      <_DCGG_ArgsLine Include=">" />
       <_DCGG_ArgsLine Include="Compile" />
       <_DCGG_ArgsLine Include="@(Compile)" />
       <_DCGG_ArgsLine Include=">" />

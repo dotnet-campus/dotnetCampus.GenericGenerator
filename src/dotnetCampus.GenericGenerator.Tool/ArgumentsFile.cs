@@ -14,5 +14,7 @@ namespace dotnetCampus.Runtime.CompilerServices
         }
 
         public string[] Compile => ((string)GetString()).Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+        public string[] DefineConstants => ((string)GetString()).Split(';', StringSplitOptions.RemoveEmptyEntries);
     }
 }
