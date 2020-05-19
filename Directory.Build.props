@@ -1,0 +1,11 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <nullable>enable</nullable>
+    <WarningsAsErrors>$(WarningsAsErrors);CS8600;CS8601;CS8602;CS8603;CS8604;CS8609;CS8610;CS8614;CS8616;CS8618;CS8619;CS8622;CS8625</WarningsAsErrors>
+    <Version>0.1.0</Version>
+    <Copyright>Copyright (c) 2020 dotnet campus</Copyright>
+  </PropertyGroup>
+
+</Project>

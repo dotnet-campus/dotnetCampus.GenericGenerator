@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.0;net40</TargetFrameworks>
+    <RootNamespace>dotnetCampus.Runtime.CompilerServices</RootNamespace>
+    <DocumentationFile>$(OutputPath)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>..\..\bin\$(Configuration)</PackageOutputPath>
+    <PackageId>dotnetCampus.GenericGenerator</PackageId>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <ProjectReference Include="..\dotnetCampus.GenericGenerator.Tool\dotnetCampus.GenericGenerator.Tool.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- Include all the assets into the .nupkg file. -->
+  <Target Name="_DCGG_IncludeAllDependencies" BeforeTargets="_GetPackageFiles">
+    <ItemGroup>
+      <None Include="Assets\build\PackageId.props" Pack="True" PackagePath="build\$(PackageId).props" />
+      <None Include="Assets\build\PackageId.targets" Pack="True" PackagePath="build\$(PackageId).targets" />
+      <None Include="Assets\src\**" Pack="True" PackagePath="src" />
+      <None Include="..\dotnetCampus.GenericGenerator.Tool\bin\$(Configuration)\netcoreapp3.1\**" Pack="True" PackagePath="tools" />
+    </ItemGroup>
+  </Target>
+
+  <!-- For debug only. -->
+  <Target Name="_DCGG_CopyOutputToDebuggableFolder" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_DCGG_ToCopyFiles Include="..\dotnetCampus.GenericGenerator.Tool\bin\$(Configuration)\netcoreapp3.1\**" />
+    </ItemGroup>
+    <Message Text="Copy output files into the debug folder: @(_DCGG_ToCopyFiles)" />
+    <Copy SourceFiles="@(_DCGG_ToCopyFiles)" DestinationFolder="Assets\tools" />
+  </Target>
+
+</Project>

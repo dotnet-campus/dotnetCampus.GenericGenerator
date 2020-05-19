@@ -1,0 +1,87 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_DCGG_ImportInWpfTempProjectDependsOn>_DCGG_IncludeSourceFiles;_DCGG_IncludeGeneratedFiles</_DCGG_ImportInWpfTempProjectDependsOn>
+  </PropertyGroup>
+
+  <!-- Evaluate all the basic properties. -->
+  <Target Name="_DCGG_EvaluateProperties">
+    <PropertyGroup>
+      <_DCGG_ArgumentsFile>$(IntermediateOutputPath)dcgg\arguments.coin</_DCGG_ArgumentsFile>
+      <_DCGG_GeneratedCodeFolder>$(IntermediateOutputPath)dcgg\generated\</_DCGG_GeneratedCodeFolder>
+      <_DCGG_Root>$(MSBuildThisFileDirectory)..\</_DCGG_Root>
+      <_DCGG_SourceFolder>$(MSBuildThisFileDirectory)..\src\</_DCGG_SourceFolder>
+      <_DCGG_ToolFile>$(MSBuildThisFileDirectory)..\tools\dotnetCampus.GenericGenerator.Tool.dll</_DCGG_ToolFile>
+    </PropertyGroup>
+    <Message Text="1.1 Initialize the dotnetCampus.GenericGenerator..." />
+  </Target>
+
+  <!-- Prevent this nuget package being referenced pass through. -->
+  <Target Name="_DCGG_PrivateAssets"
+          BeforeTargets="CollectPackageReferences">
+    <ItemGroup>
+      <PackageReference Update="dotnetCampus.GenericGenerator" PrivateAssets="all" />
+    </ItemGroup>
+    <Message Text="1.2 Prevent this nuget package being referenced pass through." />
+  </Target>
+
+  <!-- Import C# code for writing in editor. -->
+  <Target Name="_DCGG_IncludeSourceFiles"
+          BeforeTargets="CoreCompile"
+          DependsOnTargets="_DCGG_EvaluateProperties">
+    <ItemGroup>
+      <_DCGG_ApiExport Include="$(_DCGG_SourceFolder)**\*.cs" />
+      <_DCGG_AllCompile Include="@(_DCGG_ApiExport)" />
+      <Compile Include="@(_DCGG_ApiExport)" />
+    </ItemGroup>
+    <Message Text="3.1 Import C# code for writing in editor: @(_DCGG_ApiExport)" />
+  </Target>
+
+  <!-- Write command line args. -->
+  <Target Name="_DCGG_WriteArgs"
+          DependsOnTargets="_DCGG_EvaluateProperties">
+    <ItemGroup>
+      <_DCGG_ArgsLine Include=">" />
+      <_DCGG_ArgsLine Include="DefineConstants" />
+      <_DCGG_ArgsLine Include="$(DefineConstants)" />
+      <_DCGG_ArgsLine Include=">" />
+      <_DCGG_ArgsLine Include="Compile" />
+      <_DCGG_ArgsLine Include="@(Compile)" />
+      <_DCGG_ArgsLine Include=">" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(_DCGG_ArgumentsFile)" Lines="@(_DCGG_ArgsLine)" Overwrite="True" />
+  </Target>
+
+  <!-- Generate generic types and Import them into the target project. -->
+  <Target Name="_DCGG_IncludeGeneratedFiles"
+          BeforeTargets="CoreCompile"
+          DependsOnTargets="_DCGG_WriteArgs">
+    <Exec ConsoleToMSBuild="True"
+          Command="dotnet &quot;$(_DCGG_ToolFile)&quot; --arguments-file &quot;$(_DCGG_ArgumentsFile) &quot; --generated-source-directory &quot;$(_DCGG_GeneratedCodeFolder) &quot;" />
+    <ItemGroup>
+      <_DCGG_GeneratedGenericCode Include="$(_DCGG_GeneratedCodeFolder)**\*.cs" />
+      <_DCGG_AllCompile Include="@(_DCGG_GeneratedGenericCode)" />
+      <Compile Include="@(_DCGG_GeneratedGenericCode)" />
+    </ItemGroup>
+    <Message Text="3.2 Import C# code for writing in editor: @(_DCGG_GeneratedGenericCode)" />
+  </Target>
+
+  <!-- Fix bugs for WPF projects. See:
+       - https://blog.walterlv.com/post/build-source-code-package-for-wpf-projects
+       - https://github.com/dotnet/wpf/issues/811 -->
+  <Target Name="_DCGG_ImportInWpfTempProject"
+          AfterTargets="MarkupCompilePass1"
+          BeforeTargets="GenerateTemporaryTargetAssembly"
+          DependsOnTargets="$(_DCGG_ImportInWpfTempProjectDependsOn)"
+          Condition=" '$(ShouldFixNuGetImportingBugForWpfProjects)' == 'True' ">
+    <ItemGroup>
+      <_GeneratedCodeFiles Include="@(_DCGG_AllCompile)" />
+    </ItemGroup>
+    <Message Text="4. Fix WPF compiling issue (https://github.com/dotnet/wpf/issues/811): @(_DCGG_AllCompile)" />
+  </Target>
+
+</Project>
