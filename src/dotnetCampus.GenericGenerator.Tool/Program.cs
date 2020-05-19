@@ -11,7 +11,23 @@ namespace dotnetCampus.Runtime.CompilerServices
     {
         private static void Main(string[] args)
         {
-            var options = CommandLine.Parse(args).As<Options>();
+            try
+            {
+                var options = CommandLine.Parse(args).As<Options>();
+                Run(options);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error: dotnetCampus.GenericGenerator error \"{ex}\"");
+            }
+        }
+
+        private static void Run(Options options)
+        {
+            if (options.ArgumentsFile is null || options.GeneratedSourceDirectory is null)
+            {
+                Console.WriteLine("error: Compiling arguments are null. This may be a bug of dotnetCampus.GenericGenerator.");
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace dotnetCampus.Runtime.CompilerServices
     /// Tips: Type parameter name MUST be T. All other names will be treated as NO CHANGE during the compilation.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
-    sealed class GenerateGenericFromThisAttribute : Attribute
+    internal sealed class GenerateGenericFromThisAttribute : Attribute
     {
         /// <summary>
         /// Mark this type as a generic template type, and many other generic types will be generated from this template.
