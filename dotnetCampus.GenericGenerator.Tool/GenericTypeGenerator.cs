@@ -9,7 +9,7 @@ namespace dotnetCampus.Runtime.CompilerServices
     internal class GenericTypeGenerator
     {
         private const string ToolName = "dotnetCampus.GenericGenerator";
-        private static readonly string ToolVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyVersionAttribute>().Version;
+        private static readonly string ToolVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "0.0.0";
 
         private static readonly string GeneratedHeader =
 $@"//------------------------------------------------------------------------------
