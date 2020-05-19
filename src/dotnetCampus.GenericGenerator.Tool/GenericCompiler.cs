@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Walterlv.IO.PackageManagement;
 
 namespace dotnetCampus.Runtime.CompilerServices
 {
@@ -20,12 +18,22 @@ namespace dotnetCampus.Runtime.CompilerServices
 
         internal void Compile(ArgumentsFile argumentsFile)
         {
+            PackageDirectory.Delete(_targetDirectory);
+            PackageDirectory.Create(_targetDirectory);
             foreach (var file in argumentsFile.Compile)
             {
+                var fileName = Path.GetFileNameWithoutExtension(file);
                 var text = File.ReadAllText(file);
                 if (text.Contains("GenerateGenericFromThis", StringComparison.Ordinal))
                 {
-                    Compile(text, argumentsFile.DefineConstants);
+                    var generatedCodes = Compile(text, argumentsFile.DefineConstants);
+                    foreach (var pair in generatedCodes)
+                    {
+                        var filePath = Path.Combine(
+                            _targetDirectory.FullName,
+                            $"{fileName}.{pair.Key}.cs");
+                        File.WriteAllText(filePath, pair.Value);
+                    }
                 }
             }
         }
