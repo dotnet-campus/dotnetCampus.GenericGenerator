@@ -5,6 +5,7 @@
     <RootNamespace>dotnetCampus.Runtime.CompilerServices</RootNamespace>
     <DocumentationFile>$(OutputPath)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
     <PackageId>dotnetCampus.GenericGenerator</PackageId>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,7 +21,7 @@
       <None Include="Assets\build\PackageId.props" Pack="True" PackagePath="build\$(PackageId).props" />
       <None Include="Assets\build\PackageId.targets" Pack="True" PackagePath="build\$(PackageId).targets" />
       <None Include="Assets\src\**" Pack="True" PackagePath="src" />
-      <None Include="$(OutputPath)$(TargetFramework)\**" Pack="True" PackagePath="tools\$(TargetFramework)" />
+      <None Include="..\dotnetCampus.GenericGenerator.Tool\bin\$(Configuration)\netcoreapp3.1\**" Pack="True" PackagePath="tools" />
     </ItemGroup>
   </Target>
 
